@@ -23,7 +23,7 @@ function App() {
           {q?.options.map(i => {
             return <Button
               disabled={answered}
-              className={`${answered && i === q?.answer ? 'bg-green-700' : ''} ${i === answer ? i === q?.answer ? 'bg-green-700' : 'bg-red-700' : ''}`}
+              className={`${answered && i === q?.answer ? 'bg-green-800' : ''} ${i === answer ? i === q?.answer ? 'bg-green-800' : 'bg-red-700' : ''}`}
               key={i}
               onClick={() => {
                 setAnswer(i);
