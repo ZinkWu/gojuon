@@ -44,10 +44,8 @@ const Config: React.FC = () => {
   ];
 
   const handleSave = () => {
-    console.log('保存的行:', selectedRows);
     localStorage.setItem('selectedRows', JSON.stringify(selectedRows));
     localStorage.setItem('practiceMode', practiceMode);
-    console.log('配置已保存到本地存储');
     navigate('/practice');
   };
 

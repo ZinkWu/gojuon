@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '../../components';
 import { getPracticeMode, getSelectedKeys, getSelectedWords, Word } from '../../utils';
+
+type Types = ['hiragana', 'katakana', 'romaji'];
 
 const Practice: React.FC = () => {
   const selectedKeys = getSelectedKeys();
@@ -13,29 +15,37 @@ const Practice: React.FC = () => {
   const [answer, setAnswer] = useState<string | undefined>(undefined);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
+  const recentWordsRef = useRef<Word[]>([]);
+
   const getRandomWord = (): Word => {
-    if (selectedKeys.length === 0 || words.length === 0) {
+    if (words.length === 0) {
       throw new Error('没有可用的单词');
     }
-    const randomKey = selectedKeys[Math.floor(Math.random() * selectedKeys.length)];
-    const wordsForKey = words.filter((word) => word.romaji.startsWith(randomKey));
-    if (wordsForKey.length === 0) {
-      return getRandomWord(); // 递归调用直到找到有效单词
+
+    let availableWords = words.filter((word) => !recentWordsRef.current.includes(word));
+    if (availableWords.length === 0) {
+      availableWords = words;
+      recentWordsRef.current = [];
     }
-    return wordsForKey[Math.floor(Math.random() * wordsForKey.length)];
+
+    const randomWord = availableWords[Math.floor(Math.random() * availableWords.length)];
+
+    recentWordsRef.current = [...recentWordsRef.current, randomWord].slice(-4); // 保留最近4个单词，确保5次内不重复
+
+    return randomWord;
   };
 
   const getQuestionAndOptions = () => {
     const questionWord = getRandomWord();
 
-    const types: ('hiragana' | 'katakana' | 'romaji')[] = ['hiragana', 'katakana', 'romaji'];
-    let questionType: (typeof types)[number], answerType: (typeof types)[number];
+    const types: Types = ['hiragana', 'katakana', 'romaji'];
+    let questionType: Types[number], answerType: Types[number];
 
     if (practiceMode === 'all') {
       [questionType, answerType] = types.sort(() => Math.random() - 0.5).slice(0, 2);
     } else {
-      questionType = (Math.random() < 0.5 ? practiceMode : 'romaji') as (typeof types)[number];
-      answerType = (questionType === 'romaji' ? practiceMode : 'romaji') as (typeof types)[number];
+      questionType = (Math.random() < 0.5 ? practiceMode : 'romaji') as Types[number];
+      answerType = (questionType === 'romaji' ? practiceMode : 'romaji') as Types[number];
     }
 
     const correctAnswer = questionWord[answerType];
