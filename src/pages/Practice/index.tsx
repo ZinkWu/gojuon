@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../../components';
 import { getPracticeMode, getSelectedKeys, getSelectedWords, Word } from '../../utils';
 
-const selectedKeys = getSelectedKeys();
-const practiceMode = getPracticeMode();
-const words = getSelectedWords(selectedKeys);
-
 const Practice: React.FC = () => {
+  const selectedKeys = getSelectedKeys();
+  const practiceMode = getPracticeMode();
+  const words = getSelectedWords(selectedKeys);
   const [currentQuestion, setCurrentQuestion] = useState<Word | null>(null);
   const [questionType, setQuestionType] = useState<'hiragana' | 'katakana' | 'romaji'>('hiragana');
   const [options, setOptions] = useState<string[]>([]);
