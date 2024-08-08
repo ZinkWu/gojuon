@@ -5,9 +5,9 @@ import { getPracticeMode, getSelectedKeys, getSelectedWords, Word } from '../../
 type Types = ['hiragana', 'katakana', 'romaji'];
 
 const Practice: React.FC = () => {
-  const selectedKeys = getSelectedKeys();
-  const practiceMode = getPracticeMode();
-  const words = getSelectedWords(selectedKeys);
+  const selectedKeys = useRef<string[]>([]);
+  const practiceMode = useRef<string>('all');
+  const words = useRef<Word[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState<Word | null>(null);
   const [questionType, setQuestionType] = useState<'hiragana' | 'katakana' | 'romaji'>('hiragana');
   const [options, setOptions] = useState<string[]>([]);
@@ -18,13 +18,13 @@ const Practice: React.FC = () => {
   const recentWordsRef = useRef<Word[]>([]);
 
   const getRandomWord = (): Word => {
-    if (words.length === 0) {
+    if (words.current.length === 0) {
       throw new Error('没有可用的单词');
     }
 
-    let availableWords = words.filter((word) => !recentWordsRef.current.includes(word));
+    let availableWords = words.current.filter((word) => !recentWordsRef.current.includes(word));
     if (availableWords.length === 0) {
-      availableWords = words;
+      availableWords = words.current;
       recentWordsRef.current = [];
     }
 
@@ -41,16 +41,16 @@ const Practice: React.FC = () => {
     const types: Types = ['hiragana', 'katakana', 'romaji'];
     let questionType: Types[number], answerType: Types[number];
 
-    if (practiceMode === 'all') {
+    if (practiceMode.current === 'all') {
       [questionType, answerType] = types.sort(() => Math.random() - 0.5).slice(0, 2);
     } else {
-      questionType = (Math.random() < 0.5 ? practiceMode : 'romaji') as Types[number];
-      answerType = (questionType === 'romaji' ? practiceMode : 'romaji') as Types[number];
+      questionType = (Math.random() < 0.5 ? practiceMode.current : 'romaji') as Types[number];
+      answerType = (questionType === 'romaji' ? practiceMode.current : 'romaji') as Types[number];
     }
 
     const correctAnswer = questionWord[answerType];
 
-    const incorrectOptions = words
+    const incorrectOptions = words.current
       .filter((word) => word !== questionWord)
       .sort(() => 0.5 - Math.random())
       .slice(0, 3)
@@ -77,6 +77,9 @@ const Practice: React.FC = () => {
   };
 
   useEffect(() => {
+    selectedKeys.current = getSelectedKeys();
+    practiceMode.current = getPracticeMode();
+    words.current = getSelectedWords(selectedKeys.current);
     newQuestion();
   }, []);
 
