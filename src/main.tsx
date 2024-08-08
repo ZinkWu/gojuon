@@ -1,10 +1,17 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import "./index.css";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import { createHashRouter, RouterProvider } from 'react-router-dom';
+import routes from './router';
+import Root from './Root.tsx';
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+
+const router = createHashRouter(routes);
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <Root>
+      <RouterProvider router={router} />
+    </Root>
   </React.StrictMode>,
 );
