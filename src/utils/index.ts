@@ -1,6 +1,6 @@
 export type Word = { hiragana: string; katakana: string; romaji: string }
 
-const words: Record<string, Word[]> = {
+export const words: Record<string, Word[]> = {
   vowel: [
     { hiragana: 'あ', katakana: 'ア', romaji: 'a' },
     { hiragana: 'い', katakana: 'イ', romaji: 'i' },
@@ -200,5 +200,10 @@ export const getPracticeMode = (): string => {
     console.log('未找到保存的练习模式，使用默认值 "all"');
     return 'all';
   }
+};
+
+
+export const generateRandomNumber = (min: number, max: number): number => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 

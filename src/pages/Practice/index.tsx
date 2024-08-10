@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '../../components';
 import { getPracticeMode, getSelectedKeys, getSelectedWords, Word } from '../../utils';
+import BackHome from '../../components/BackHome';
 
 type Types = ['hiragana', 'katakana', 'romaji'];
 
@@ -111,6 +112,7 @@ const Practice: React.FC = () => {
           ))}
         </div>
       </div>
+      <BackHome />
     </>
   );
 };

@@ -43,10 +43,10 @@ const Config: React.FC = () => {
     { key: 'py', label: 'py行' },
   ];
 
-  const handleSave = () => {
+  const handleSave = (path: string) => {
     localStorage.setItem('selectedRows', JSON.stringify(selectedRows));
     localStorage.setItem('practiceMode', practiceMode);
-    navigate('/practice');
+    navigate(`/${path}`);
   };
 
   const handleLoad = () => {
@@ -114,9 +114,16 @@ const Config: React.FC = () => {
         <button
           disabled={selectedRows.length === 0}
           className={`mt-4 px-4 py-2 rounded ${selectedRows.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600'} text-white`}
-          onClick={handleSave}
+          onClick={() => handleSave('practice')}
         >
-          保存配置并练习
+          练习
+        </button>
+        <button
+          disabled={selectedRows.length === 0}
+          className={`mt-4 px-4 py-2 rounded ${selectedRows.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-600'} text-white`}
+          onClick={() => handleSave('play-audio')}
+        >
+          听写练习
         </button>
         <button className="mt-4 bg-green-600 text-white px-4 py-2 rounded" onClick={handleLoad}>
           使用上次配置
